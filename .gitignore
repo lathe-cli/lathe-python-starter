@@ -1,0 +1,10 @@
+.cache/
+.local/
+.venv/
+__pycache__/
+*.py[cod]
+bin/
+coverage/
+.env
+.DS_Store
+
