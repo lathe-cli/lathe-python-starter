@@ -1,0 +1,28 @@
+schema_version: 1
+language: python
+defaults:
+  app_name: CLI-first Python app
+  app_slug: cli-first-python-app
+  cli_name: appctl
+  go_module: example.com/cli-first-python-app
+  lathe_version: v0.4.4
+replacements:
+  - variable: app_name
+    files: [README.md]
+  - variable: app_name
+    from: CLI-first Node application
+    files: [openapi/openapi.yaml]
+  - variable: app_slug
+    files: [pyproject.toml, uv.lock]
+  - variable: cli_name
+    files: [.github/workflows/ci.yml, AGENTS.md, Makefile, README.md, cli.yaml, cmd/appctl/cli.yaml, tests/test_cli.py]
+  - variable: go_module
+    files: [go.mod, cmd/appctl/main.go]
+  - variable: lathe_version
+    files: [go.mod, Makefile]
+renames:
+  - from: cmd/appctl
+    variable: cli_name
+generated: [internal/generated, skills/appctl]
+cleanup: [.cache, bin, .venv]
+check_profile: make
