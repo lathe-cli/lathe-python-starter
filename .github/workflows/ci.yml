@@ -1,0 +1,29 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: true
+      - run: uv sync --locked
+      - run: make cli-sync
+      - name: Verify generated CLI is current
+        run: git diff --exit-code -- cmd/appctl/cli.yaml internal/generated skills/appctl go.mod go.sum
+      - run: make test
+      - run: uv run --locked python -m compileall -q src tests
+      - run: go vet ./...
