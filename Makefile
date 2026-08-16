@@ -2,7 +2,7 @@
 
 cli-sync:
 	cp cli.yaml cmd/appctl/cli.yaml
-	go run github.com/lathe-cli/lathe/cmd/lathe@v0.4.4 bootstrap
+	go run github.com/lathe-cli/lathe/cmd/lathe@v0.5.3-0.20260816043253-e33580932a42 bootstrap
 	go mod tidy
 
 cli-build:
@@ -14,4 +14,3 @@ test: cli-build
 check: cli-sync test
 	uv run --locked python -m compileall -q src tests
 	go vet ./...
-
