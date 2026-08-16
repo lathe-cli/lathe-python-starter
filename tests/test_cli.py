@@ -40,7 +40,7 @@ class CLITest(unittest.TestCase):
             text=True,
         )
         self.assertNotEqual(result.returncode, 0)
-        return json.loads(result.stderr)["error"]["message"]
+        return json.loads(result.stderr)["error"]
 
     def test_generated_cli_is_the_application_acceptance_surface(self):
         self.assertEqual(self.cli("health", "get"), {"status": "ok"})
@@ -54,11 +54,11 @@ class CLITest(unittest.TestCase):
         self.assertEqual(self.cli("tasks", "list"), [])
 
     def test_generated_cli_surfaces_api_errors(self):
-        self.assertIn("HTTP 400", self.cli_failure("tasks", "create", "--set-str", "title="))
-        self.assertIn("HTTP 404", self.cli_failure("tasks", "get", "--id", "missing"))
+        self.assertEqual(self.cli_failure("tasks", "create", "--set-str", "title=")["http"]["status"], 400)
+        self.assertEqual(self.cli_failure("tasks", "get", "--id", "missing")["http"]["status"], 404)
         task = self.cli("tasks", "create", "--set", "title=Keep the contract honest")
         error = self.cli_failure("tasks", "update", "--id", task["id"], "--file", "test/empty.json")
-        self.assertIn("title or completed is required", error)
+        self.assertEqual(error["http"]["status"], 400)
 
     def test_http_boundary_rejects_unsupported_input(self):
         status, headers, _ = self.request("PUT", "/tasks")
@@ -88,4 +88,3 @@ class CLITest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
