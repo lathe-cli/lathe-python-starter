@@ -2,7 +2,7 @@
 
 A minimal Python application where the CLI is ready on day one. Change the application, update OpenAPI, and test through the generated `appctl` CLI.
 
-Requires Python 3.14+, uv, and Go 1.25+.
+Requires Python 3.14+, uv, and Go 1.26+.
 
 ```sh
 uv sync
